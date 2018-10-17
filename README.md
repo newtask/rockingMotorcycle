@@ -1,5 +1,5 @@
 # rockingMotorcycle
-A accelerometer triggered sound and light generator for rocking motorcycles. Developed with python and a raspberry pi zero
+An accelerometer triggered sound and light generator for rocking motorcycles. Developed with python and a raspberry pi zero
 
 ## Todo
 
@@ -15,4 +15,8 @@ A accelerometer triggered sound and light generator for rocking motorcycles. Dev
 | Mode  | Audio |  LED | Trigger |
 | ------------- | ------------- | ------------- | ------------- |
 | STARTING  | Motorcycle starts engine  |  Bright flash |  when app starts |
-| IDLE  | Motorcycle is neutral gear  | slow fading | after STARTING or BREAKING mode|
+| IDLE  | Motorcycle is neutral gear  | slow fading | after STARTING or BREAKING mode| 
+| ACCELERATE| Motorcycle is geeting more speed | LED chase is starting  and getting faster |Accelerometer detects movement | 
+| RUNNING | Motorcycle is driving | LED chase at high speed | Accelerometer continues detecting movement |
+| DEACCELERATE | Motorcycle is slowing down | LED chase is slowing down | Accelerometer does detect less movement |
+
