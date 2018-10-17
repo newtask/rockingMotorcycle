@@ -13,8 +13,6 @@ class Button(Listener):
 
         Listener.__init__(self)
 
-
-
         self.RELEASED = 0
         self.PRESSED = 1
         self.IDLE = 2

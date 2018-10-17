@@ -1,9 +1,12 @@
+#!/usr/bin/python3
+
 import time
 
 import RPi.GPIO as GPIO
 
 from button import Button
 from led import LED
+from ledController import LEDController
 
 GPIO.setmode(GPIO.BCM)
 
@@ -43,26 +46,26 @@ def buttonLedTest():
 
     led = LED(pinLED)
     button = Button(pinBTN)
+    lc = LEDController(led)
+    lc.start()
 
-    def blink(count):
-        waitTime = 0.1
-        # blink once
-
-        for i in range(count):
-            led.on()
-            time.sleep(waitTime)
-
-            led.off()
-            time.sleep(waitTime)
 
     def buttonListner(mode):
-        blink(mode + 1)
-
+        printResult(mode)
+        if mode is Button.NORMAL_PRESS:
+            lc.do(LEDController.BLINKMIN+3)
+        else:
+            lc.do(LEDController.LONGMIN + 1)
 
     button.setListener(buttonListner)
+    try:
+        while True:
+            button.loop()
+    except KeyboardInterrupt:
+        print("Cancel button-LED test")
 
-    while True:
-        button.loop()
+    lc.stop()
+
 
 print("Start test units. Use ctrl+c to stop current test.")
 
@@ -76,10 +79,9 @@ try:
 except KeyboardInterrupt:
     print("Cancel button test")
 
-try:
+
     buttonLedTest()
-except KeyboardInterrupt:
-    print("Cancel button-LED test")
+
 
 # Cleanup GPIO settings
 GPIO.cleanup()
