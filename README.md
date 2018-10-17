@@ -3,7 +3,7 @@ An accelerometer triggered sound and light generator for rocking motorcycles. De
 
 ## Todo
 
-- Add button that changes the volume on a single press and restarts the app on a long press
+- ~~Add button that changes the volume on a single press and restarts the app on a long press~~
 - Add a led strip that has at least two modes:
   - Idle mode: Fading in and out 
   - LED chase where the speed can be changed

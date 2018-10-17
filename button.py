@@ -2,10 +2,14 @@ import time
 
 import RPi.GPIO as GPIO
 
+from listener import Listener
 
-class Button:
+
+class Button(Listener):
 
     def __init__(self, pin, longPressTime=1000):
+
+        Listener.__init__(self)
 
         self.NORMAL_PRESS = 0
         self.LONG_PRESS = 1
@@ -15,7 +19,6 @@ class Button:
         self.IDLE = 2
 
         self.state = self.RELEASED
-        self.listener = None
 
         self.longPressTime = longPressTime
         self.pressedTime = 0
@@ -68,9 +71,3 @@ class Button:
 
     def get_millis(self):
         return int(round(time.time() * 1000))
-
-    def setListener(self, listener):
-        self.listener = listener
-
-    def removeListener(self):
-        self.listener = None
