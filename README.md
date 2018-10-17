@@ -20,3 +20,7 @@ An accelerometer triggered sound and light generator for rocking motorcycles. De
 | RUNNING | Motorcycle is driving | LED chase at high speed | Accelerometer continues detecting movement |
 | DEACCELERATE | Motorcycle is slowing down | LED chase is slowing down | Accelerometer does detect less movement |
 
+# How to install rockingMototcycle
+Check if you have python3 installed
+## Install libs
+- sudo apt-get install python3-rpi.gpio -y
