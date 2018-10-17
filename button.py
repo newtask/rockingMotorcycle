@@ -6,13 +6,14 @@ from listener import Listener
 
 
 class Button(Listener):
+    NORMAL_PRESS = 0
+    LONG_PRESS = 1
 
     def __init__(self, pin, longPressTime=1000):
 
         Listener.__init__(self)
 
-        self.NORMAL_PRESS = 0
-        self.LONG_PRESS = 1
+
 
         self.RELEASED = 0
         self.PRESSED = 1
@@ -61,13 +62,13 @@ class Button(Listener):
         if self.listener is None:
             return
 
-        self.listener(self.LONG_PRESS)
+        self.listener(Button.LONG_PRESS)
 
     def notifyNormalPressed(self):
         if self.listener is None:
             return
 
-        self.listener(self.NORMAL_PRESS)
+        self.listener(Button.NORMAL_PRESS)
 
     def get_millis(self):
         return int(round(time.time() * 1000))
