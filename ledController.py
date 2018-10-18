@@ -2,12 +2,18 @@ import threading
 import time
 
 
+class LEDTask:
+    repeat = 0
+    onDuration = 0
+    offDuration = 0
+
+    def __init__(self, repeat, onDuration, offDuration):
+        self.repeat = repeat
+        self.onDuration = onDuration
+        self.offDuration = offDuration
+
+
 class LEDController(threading.Thread):
-    IDLE = 0
-    BLINKMIN = 10
-    BLINKMAX = 19
-    LONGMIN = 20
-    LONGMAX = 29
 
     def __init__(self, led):
         threading.Thread.__init__(self)
@@ -17,26 +23,17 @@ class LEDController(threading.Thread):
         self.taskIsRunning = False
         self.led = led
         self.minWaitTime = 0.1
+        self.currentTask = None
 
-        self.currentTask = LEDController.IDLE
+    def blink(self, repeat, onDuration, offDuration):
+        self.cancelTask = True
 
-    def blink(self, count):
-        self.taskIsRunning = True
+        # wait until current task is finished
+        while self.taskIsRunning:
+            time.sleep(self.minWaitTime)
 
-        waitTime = 0.1
-        # blink once
-
-        for i in range(count):
-            self.led.on()
-            self.sleep(waitTime)
-
-            self.led.off()
-            self.sleep(waitTime)
-
-            if self.cancelTask:
-                break
-
-        self.taskIsRunning = False
+        self.cancelTask = False
+        self.currentTask = LEDTask(repeat, onDuration, offDuration)
 
     def sleep(self, sec):
 
@@ -46,36 +43,33 @@ class LEDController(threading.Thread):
                 return
             time.sleep(self.minWaitTime)
 
-    def long(self, waitTime):
-        self.taskIsRunning = True
-
-        self.led.on()
-        self.sleep(waitTime)
-        self.led.off()
-
-        self.taskIsRunning = False
-
-    def do(self, task):
-        self.cancelTask = True
-
-        # wait until current task is finished
-        while self.taskIsRunning:
-            time.sleep(self.minWaitTime)
-
-        self.cancelTask = False
-        self.currentTask = task
-
     def stop(self):
+        self.cancelTask = True
         self.isRunning = False
 
     def run(self):
         while self.isRunning:
-            if LEDController.BLINKMIN <= self.currentTask <= LEDController.BLINKMAX:
-                self.blink(self.currentTask - LEDController.BLINKMIN + 1)
-            elif LEDController.LONGMIN <= self.currentTask <= LEDController.LONGMAX:
-                self.long(self.currentTask - LEDController.LONGMIN + 1)
+            if self.currentTask is not None:
+                self.taskIsRunning = True
 
-            self.currentTask = LEDController.IDLE
+                for i in range(self.currentTask.repeat):
+                    self.led.on()
+
+                    self.sleep(self.currentTask.onDuration)
+
+                    self.led.off()
+
+                    if self.cancelTask:
+                        break
+
+                    self.sleep(self.currentTask.offDuration)
+
+                    if self.cancelTask:
+                        break
+
+                self.taskIsRunning = False
+
+            self.currentTask = None
 
             # prevent restarting directly
             time.sleep(self.minWaitTime)

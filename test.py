@@ -49,13 +49,12 @@ def buttonLedTest():
     lc = LEDController(led)
     lc.start()
 
-
     def buttonListner(mode):
         printResult(mode)
         if mode is Button.NORMAL_PRESS:
-            lc.do(LEDController.BLINKMIN+3)
+            lc.blink(3, 0.5, 0.5)
         else:
-            lc.do(LEDController.LONGMIN + 1)
+            lc.blink(1, 3, 0)
 
     button.setListener(buttonListner)
     try:
@@ -79,9 +78,7 @@ try:
 except KeyboardInterrupt:
     print("Cancel button test")
 
-
     buttonLedTest()
-
 
 # Cleanup GPIO settings
 GPIO.cleanup()
