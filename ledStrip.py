@@ -4,6 +4,17 @@ import time
 from neopixel import *
 
 
+class RGBColor():
+    def __init__(self, r, g, b, w=0):
+        self.r = r
+        self.g = g
+        self.b = b
+        self.w = w
+
+    def toColor(self):
+        return Color(self.g, self.r, self.b, self.w)
+
+
 class LEDAnimation:
     COLOR_GREEN = Color(255, 0, 0)  # green, red, blue
     COLOR_RED = Color(0, 255, 0)
@@ -69,6 +80,70 @@ class LEDAnimation:
         return self.name
 
 
+class FadeAnimation(LEDAnimation):
+
+    def __init__(self, c1, c2, iterations: int = 10, wait_ms: int = 50):
+        super().__init__("Fade", wait_ms)
+
+        self.iterations = iterations
+        self.c1 = c1
+        self.c2 = c2
+
+    def fade(self, c1, c2):
+        for i in range(1, self.iterations + 1):
+
+            if self.isStopped:
+                break
+
+            color = self.calcColor(c1, c2, i)
+            for j in range(self.strip.numPixels()):
+                self.strip.setPixelColor(j, color)
+            self.strip.show()
+
+            time.sleep(self.wait_ms / 1000.0)
+
+    def loop(self):
+        if self.isValid() is False:
+            return
+
+        self.isRunning = True
+
+        print("fade")
+
+        self.fade(self.c1, self.c2)
+
+        self.isRunning = False
+
+    def calcColor(self, c1, c2, i):
+        r = int(((c1.r * (self.iterations - i)) + (c2.r * i)) / self.iterations)
+        g = int(((c1.g * (self.iterations - i)) + (c2.g * i)) / self.iterations)
+        b = int(((c1.b * (self.iterations - i)) + (c2.b * i)) / self.iterations)
+        w = int(((c1.w * (self.iterations - i)) + (c2.w * i)) / self.iterations)
+
+        return Color(g, r, b, w)
+
+
+class FadeCycleAnimation(FadeAnimation):
+
+    def __init__(self, c1, c2, iterations: int = 10, wait_ms: int = 50):
+        super().__init__(c1, c2, iterations, wait_ms)
+
+        self.name = "Fade cycle"
+
+    def loop(self):
+        if self.isValid() is False:
+            return
+
+        self.isRunning = True
+
+        print("fad cyclee")
+
+        self.fade(self.c1, self.c2)
+        self.fade(self.c2, self.c1)
+
+        self.isRunning = False
+
+
 class ColorSetAnimation(LEDAnimation):
     def __init__(self, color: Color, wait_ms: int = 50):
         super().__init__("Color set", wait_ms)
@@ -81,12 +156,12 @@ class ColorSetAnimation(LEDAnimation):
 
         self.isRunning = True
 
+        print("color", self.color)
+
         self.setColor(self.color)
         time.sleep(1)
 
         self.isRunning = False
-
-        print("theaterChase")
 
 
 class TheaterChaseAnimation(LEDAnimation):

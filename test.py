@@ -8,7 +8,7 @@ from button import Button
 from led import LED
 from ledController import LEDController
 from ledStrip import LEDStrip, TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
-    RainbowCycleAnimation, TheaterChaseRainbowAnimation, ColorSetAnimation
+    RainbowCycleAnimation, TheaterChaseRainbowAnimation, ColorSetAnimation, FadeAnimation, RGBColor, FadeCycleAnimation
 
 GPIO.setmode(GPIO.BCM)
 
@@ -82,6 +82,10 @@ def ledStripTest():
     ledStrip = LEDStrip()
 
     animations = []
+
+    animations.append(FadeCycleAnimation(RGBColor(0, 0, 0), RGBColor(255, 255, 255), 50, int(1000 / 50)))
+    animations.append(FadeAnimation(RGBColor(255, 0, 0), RGBColor(0, 255, 0), 50, int(1000 / 50)))
+    animations.append(FadeAnimation(RGBColor(0, 255, 0), RGBColor(0, 0, 255), 50, int(1000 / 50)))
     animations.append(RainbowAnimation())
     animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_WHITE))
     animations.append(ColorWipeAnimation(LEDAnimation.COLOR_RED))
