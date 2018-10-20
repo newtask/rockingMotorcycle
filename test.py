@@ -7,6 +7,8 @@ import RPi.GPIO as GPIO
 from button import Button
 from led import LED
 from ledController import LEDController
+from ledStrip import LEDStrip, TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
+    RainbowCycleAnimation, TheaterChaseRainbowAnimation, ColorSetAnimation
 
 GPIO.setmode(GPIO.BCM)
 
@@ -23,12 +25,15 @@ def ledTest():
 
     led = LED(pinLED)
     led.setListener(printResult)
+    try:
 
-    while True:
-        led.on()
-        time.sleep(1)
-        led.off()
-        time.sleep(1)
+        while True:
+            led.on()
+            time.sleep(1)
+            led.off()
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Cancel led test")
 
 
 def buttonTest():
@@ -36,9 +41,12 @@ def buttonTest():
 
     button = Button(pinBTN)
     button.setListener(printResult)
+    try:
 
-    while True:
-        button.loop()
+        while True:
+            button.loop()
+    except KeyboardInterrupt:
+        print("Cancel button test")
 
 
 def buttonLedTest():
@@ -66,19 +74,59 @@ def buttonLedTest():
     lc.stop()
 
 
+animIndex = -1
+
+
+def ledStripTest():
+    print("Start led strip test")
+    ledStrip = LEDStrip()
+
+    animations = []
+    animations.append(RainbowAnimation())
+    animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_WHITE))
+    animations.append(ColorWipeAnimation(LEDAnimation.COLOR_RED))
+    animations.append(RainbowCycleAnimation())
+    animations.append(TheaterChaseRainbowAnimation())
+    animations.append(ColorSetAnimation(LEDAnimation.COLOR_BLACK))
+
+    ledStrip.start()
+
+    def setNextAnimation():
+        global animIndex
+        animIndex += 1
+        if animIndex >= len(animations):
+            animIndex = 0
+
+        a = animations[animIndex]
+        ledStrip.setAnimation(a)
+
+    def onButtonClick(mode):
+        if mode is Button.NORMAL_PRESS:
+            setNextAnimation()
+
+        else:
+            a = ColorWipeAnimation(LEDAnimation.COLOR_BLACK)
+            ledStrip.setAnimation(a)
+
+    button = Button(pinBTN)
+    button.setListener(onButtonClick)
+    setNextAnimation()
+
+    try:
+        while True:
+            button.loop()
+    except KeyboardInterrupt:
+        print("Cancel button-LED test")
+
+    ledStrip.stop()
+
+
 print("Start test units. Use ctrl+c to stop current test.")
 
-try:
-    ledTest()
-except KeyboardInterrupt:
-    print("Cancel led test")
-
-try:
-    buttonTest()
-except KeyboardInterrupt:
-    print("Cancel button test")
-
-    buttonLedTest()
+ledStripTest()
+# ledTest()
+# buttonTest()
+# buttonLedTest()
 
 # Cleanup GPIO settings
 GPIO.cleanup()

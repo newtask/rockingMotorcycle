@@ -18,12 +18,17 @@ class LEDController(threading.Thread):
     def __init__(self, led):
         threading.Thread.__init__(self)
 
-        self.isRunning = True
         self.cancelTask = False
         self.taskIsRunning = False
         self.led = led
         self.minWaitTime = 0.1
         self.currentTask = None
+        self.isRunning = False
+
+    def start(self):
+        self.isRunning = True
+        super(LEDController, self).start()
+
 
     def blink(self, repeat, onDuration, offDuration):
         self.cancelTask = True
