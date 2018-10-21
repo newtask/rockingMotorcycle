@@ -8,6 +8,7 @@ from controller.imuController import IMUController
 from controller.ledController import LEDController
 from lib.LSM6DS3 import LSM6DS3
 from lib.LSM6DS3_ALT import LSM6DS3_alt
+from lib.audio import Audio
 from lib.button import Button
 from lib.led import LED
 from lib.ledAnimations import TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
@@ -188,12 +189,47 @@ def imuControllerTest():
         print("Cancel imu controller test")
 
 
+def audioTest():
+    print("Start audio test")
+    audio = Audio(70)
+
+    def onPressed(mode):
+        vol = audio.getVolume()
+        if mode is Button.NORMAL_PRESS:
+            if vol == 100:
+                audio.setVolume(70)
+            else:
+                audio.volumeUp()
+
+        else:
+            if audio.isMute:
+                audio.unmute()
+            else:
+                audio.mute()
+
+        print("volume {}".format(audio.getVolume()))
+
+    btn = Button(pinBTN)
+    btn.setListener(onPressed)
+
+    try:
+        print(audio.getVolume())
+        print(audio.setVolume(20))
+        print(audio.getVolume())
+
+        while True:
+            btn.loop()
+    except KeyboardInterrupt:
+        print("Cancel imu controller test")
+
+
 print("Start test units. Use ctrl+c to stop current test.")
 
-imuControllerTest()
+audioTest()
+# ledStripTest()
+# imuControllerTest()
 # imuTest()
 # imuTestAlt()
-# ledStripTest()
 # ledTest()
 # buttonTest()
 # buttonLedTest()
