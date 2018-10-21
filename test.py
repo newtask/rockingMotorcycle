@@ -83,7 +83,8 @@ def ledStripTest():
 
     animations = []
 
-    animations.append(FadeCycleAnimation(RGBColor(0, 0, 0), RGBColor(255, 255, 255), 50, int(1000 / 50)))
+    animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_WHITE, 500, 10, 6))
+    animations.append(FadeCycleAnimation(RGBColor(0, 0, 0), RGBColor(255, 255, 255), 25, int(1000 / 200)))
     animations.append(FadeAnimation(RGBColor(255, 0, 0), RGBColor(0, 255, 0), 50, int(1000 / 50)))
     animations.append(FadeAnimation(RGBColor(0, 255, 0), RGBColor(0, 0, 255), 50, int(1000 / 50)))
     animations.append(RainbowAnimation())

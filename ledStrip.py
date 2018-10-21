@@ -165,11 +165,12 @@ class ColorSetAnimation(LEDAnimation):
 
 
 class TheaterChaseAnimation(LEDAnimation):
-    def __init__(self, color: Color, wait_ms: int = 50, iterations: int = 10):
+    def __init__(self, color: Color, wait_ms: int = 50, iterations: int = 10, distance=3):
         super().__init__("Theater Chase", wait_ms)
 
         self.color = color
         self.iterations = iterations
+        self.distance = distance
 
     def loop(self):
         if self.isValid() is False:
@@ -184,16 +185,16 @@ class TheaterChaseAnimation(LEDAnimation):
             if self.isStopped:
                 break
 
-            for q in range(3):
+            for q in range(self.distance):
                 if self.isStopped:
                     break
 
-                for i in range(0, self.strip.numPixels(), 3):
+                for i in range(0, self.strip.numPixels(), self.distance):
                     self.strip.setPixelColor(i + q, self.color)
 
                 self.strip.show()
                 time.sleep(self.wait_ms / 1000.0)
-                for i in range(0, self.strip.numPixels(), 3):
+                for i in range(0, self.strip.numPixels(), self.distance):
                     self.strip.setPixelColor(i + q, 0)
 
         self.isRunning = False
