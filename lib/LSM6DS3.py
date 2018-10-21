@@ -2,7 +2,7 @@ import math
 
 import Adafruit_GPIO.I2C as I2C
 
-from lib.LSM6DS3_CONST import *
+from .LSM6DS3_CONST import *
 
 address = 0x6b
 

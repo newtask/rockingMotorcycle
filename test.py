@@ -4,13 +4,15 @@ import time
 
 import RPi.GPIO as GPIO
 
-from lib.button import Button
-from lib.led import LED
+from controller.imuController import IMUController
 from controller.ledController import LEDController
-from lib.ledStrip import LEDStrip, TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
-    RainbowCycleAnimation, TheaterChaseRainbowAnimation, ColorSetAnimation, FadeAnimation, RGBColor, FadeCycleAnimation
 from lib.LSM6DS3 import LSM6DS3
 from lib.LSM6DS3_ALT import LSM6DS3_alt
+from lib.button import Button
+from lib.led import LED
+from lib.ledAnimations import TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
+    RainbowCycleAnimation, TheaterChaseRainbowAnimation, ColorSetAnimation, FadeAnimation, RGBColor, FadeCycleAnimation
+from lib.ledStrip import LEDStrip
 
 GPIO.setmode(GPIO.BCM)
 
@@ -169,8 +171,26 @@ def imuTestAlt():
         print("Cancel imu test")
 
 
+def imuControllerTest():
+    print("Start imu controller test")
+
+    def onChange():
+        print("has changed")
+
+    imuController = IMUController(0x6a, limit=1000)
+    imuController.setListener(onChange)
+    imuController.start()
+
+    try:
+        while True:
+            time.sleep(0.2)
+    except KeyboardInterrupt:
+        print("Cancel imu controller test")
+
+
 print("Start test units. Use ctrl+c to stop current test.")
 
+imuControllerTest()
 # imuTest()
 # imuTestAlt()
 # ledStripTest()

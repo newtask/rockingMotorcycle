@@ -29,7 +29,6 @@ class LEDController(threading.Thread):
         self.isRunning = True
         super(LEDController, self).start()
 
-
     def blink(self, repeat, onDuration, offDuration):
         self.cancelTask = True
 

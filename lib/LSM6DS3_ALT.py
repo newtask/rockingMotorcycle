@@ -1,8 +1,9 @@
-from .LSM6DS3_CONST import *
 import Adafruit_GPIO.I2C as I2C
 
-class ACCGYRO():
+from .LSM6DS3_CONST import *
 
+
+class ACCGYRO():
     WHO_IAM_ANSWER = 0x69
     WHO_IAM_REG = 0xF
 
@@ -15,7 +16,7 @@ class ACCGYRO():
         self.i2c.write8(LSM6DS3_XG_CTRL3_C, tmp)
         # Disable FIFO
         self.i2c.write8(LSM6DS3_XG_FIFO_CTRL5,
-                   LSM6DS3_XG_FIFO_MODE['BYPASS'] | LSM6DS3_XG_FIFO_ODR['NA'])
+                        LSM6DS3_XG_FIFO_MODE['BYPASS'] | LSM6DS3_XG_FIFO_ODR['NA'])
 
     def set_multi_byte(self, addr):
         ''' Multi byte read is configured in register CTRL3'''
@@ -59,7 +60,7 @@ class ACCEL(ACCGYRO):
         # Get sensitivity
         sens = (self.i2c.readU8(LSM6DS3_XG_CTRL1_XL) & LSM6DS3_XL_FS['MASK'])
         sens = (1 << (sens >> LSM6DS3_XL_FS['SHIFT'])) * 0.061
-        return (x*sens, y*sens, z*sens)
+        return (x * sens, y * sens, z * sens)
 
 
 class GYRO(ACCGYRO):
@@ -103,16 +104,16 @@ class GYRO(ACCGYRO):
             sens = 70.0
         else:
             raise Exception("Unknown gyro sensitivity 0x%02x" % (sens))
-        return (x*sens, y*sens, z*sens)
+        return (x * sens, y * sens, z * sens)
 
 
 class LSM6DS3_alt():
 
     def __init__(self, dev_selector):
         # Setup defaults on gyro and accel
-        self.accel = ACCEL( dev_selector)
+        self.accel = ACCEL(dev_selector)
         self.accel.ctrl()
-        self.gyro = GYRO( dev_selector)
+        self.gyro = GYRO(dev_selector)
         self.gyro.ctrl()
 
     def temperature(self):
