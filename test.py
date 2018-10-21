@@ -4,11 +4,13 @@ import time
 
 import RPi.GPIO as GPIO
 
-from button import Button
-from led import LED
-from ledController import LEDController
-from ledStrip import LEDStrip, TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
+from lib.button import Button
+from lib.led import LED
+from controller.ledController import LEDController
+from lib.ledStrip import LEDStrip, TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
     RainbowCycleAnimation, TheaterChaseRainbowAnimation, ColorSetAnimation, FadeAnimation, RGBColor, FadeCycleAnimation
+from lib.LSM6DS3 import LSM6DS3
+from lib.LSM6DS3_ALT import LSM6DS3_alt
 
 GPIO.setmode(GPIO.BCM)
 
@@ -131,9 +133,47 @@ def ledStripTest():
     ledStrip.stop()
 
 
+def imuTest():
+    print("Start imu test")
+    lsm = LSM6DS3(0x6a)
+    try:
+        while True:
+            acclX = lsm.readRawAccelX()
+            acclY = lsm.readRawAccelX()
+            acclZ = lsm.readRawAccelX()
+            gyroX = lsm.readRawGyroX()
+            gyroY = lsm.readRawGyroY()
+            gyroZ = lsm.readRawGyroZ()
+            print("accl {} ".format((acclX, acclY, acclZ)))
+            print("gyro {} ".format((gyroX, gyroY, gyroZ)))
+            print("angle {} {}".format(lsm.calcAnglesXY(), lsm.calcGyroXAngle()))
+
+            time.sleep(0.2)
+    except KeyboardInterrupt:
+        print("Cancel imu test")
+
+
+def imuTestAlt():
+    print("Start imu test")
+    lsm_alt = LSM6DS3_alt(0x6a)
+    try:
+        while True:
+            accl = lsm_alt.accel.xyz()
+            gyro = lsm_alt.gyro.xyz()
+            print("acclx {} ".format(accl))
+            print("gyro {} ".format(gyro))
+            # print("temp {} ".format(lsm_alt.temperature()))
+
+            time.sleep(0.2)
+    except KeyboardInterrupt:
+        print("Cancel imu test")
+
+
 print("Start test units. Use ctrl+c to stop current test.")
 
-ledStripTest()
+# imuTest()
+# imuTestAlt()
+# ledStripTest()
 # ledTest()
 # buttonTest()
 # buttonLedTest()

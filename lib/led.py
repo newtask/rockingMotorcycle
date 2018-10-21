@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
-from listener import Listener
+
+from lib.listener import Listener
+
 
 class LED(Listener):
 
@@ -32,4 +34,3 @@ class LED(Listener):
             return
 
         self.listener(self.state)
-

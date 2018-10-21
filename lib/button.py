@@ -2,7 +2,7 @@ import time
 
 import RPi.GPIO as GPIO
 
-from listener import Listener
+from lib.listener import Listener
 
 
 class Button(Listener):
