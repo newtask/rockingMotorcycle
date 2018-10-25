@@ -9,6 +9,7 @@ from controller.ledController import LEDController
 from lib.LSM6DS3 import LSM6DS3
 from lib.LSM6DS3_ALT import LSM6DS3_alt
 from lib.audio import Audio
+from lib.audioMixer import AudioMixer
 from lib.button import Button
 from lib.led import LED
 from lib.ledAnimations import TheaterChaseAnimation, LEDAnimation, ColorWipeAnimation, RainbowAnimation, \
@@ -220,12 +221,49 @@ def audioTest():
         while True:
             btn.loop()
     except KeyboardInterrupt:
-        print("Cancel imu controller test")
+        print("Cancel audio test")
+
+
+def audioMixerTest():
+    print("Start audio mixer test")
+
+    import os
+    from os import path
+
+    appPath = os.path.dirname(os.path.abspath(__file__))
+    audioFolder = path.join(appPath, "audio")
+
+    audio = Audio(70)
+    mixer = AudioMixer()
+
+    mixer.addSound("start", path.join(audioFolder, "h_start.wav"))
+    mixer.addSound("stop", path.join(audioFolder, "h_stop.wav"))
+    mixer.addSound("speedUp", path.join(audioFolder, "h_speedUp.wav"))
+    mixer.addSound("idle", path.join(audioFolder, "h_idle.wav"))
+    mixer.addSound("drive", path.join(audioFolder, "h_drive.wav"))
+
+    def onPressed(mode):
+        if mode is Button.NORMAL_PRESS:
+            mixer.playSound("speedUp", False, 300, "drive", True)
+        else:
+            mixer.playSound("stop", False, 300, "idle", True)
+
+    btn = Button(pinBTN)
+    btn.setListener(onPressed)
+
+    mixer.playSound("start", False, 0, "idle", True)
+
+    try:
+        while True:
+            btn.loop()
+    except KeyboardInterrupt:
+        print("Cancel audio mixer test")
 
 
 print("Start test units. Use ctrl+c to stop current test.")
 
-audioTest()
+# audioTest()
+audioMixerTest()
 # ledStripTest()
 # imuControllerTest()
 # imuTest()
