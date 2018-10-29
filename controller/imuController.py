@@ -26,7 +26,7 @@ class IMUController(threading.Thread, Listener):
         dx = cx - self.lastGyroX
 
         if dx > self.limit or dx < -self.limit:
-            print("dx", dx)
+            # print("dx", dx)
             self.lastGyroX = cx
             return True
 
@@ -38,7 +38,7 @@ class IMUController(threading.Thread, Listener):
         dy = cy - self.lastGyroY
 
         if dy > self.limit or dy < -self.limit:
-            print("dy", dy)
+            # print("dy", dy)
             self.lastGyroX = cy
             return True
 
@@ -50,7 +50,7 @@ class IMUController(threading.Thread, Listener):
         dz = cz - self.lastGyroZ
 
         if dz > self.limit or dz < -self.limit:
-            print("dz", dz)
+            # print("dz", dz)
             self.lastGyroZ = cz
             return True
 

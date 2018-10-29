@@ -235,23 +235,29 @@ def audioMixerTest():
 
     audio = Audio(70)
     mixer = AudioMixer()
-
+ 
     mixer.addSound("start", path.join(audioFolder, "h_start.wav"))
     mixer.addSound("stop", path.join(audioFolder, "h_stop.wav"))
-    mixer.addSound("speedUp", path.join(audioFolder, "h_speedUp.wav"))
+    mixer.addSound("speedUp", path.join(audioFolder, "h_speedup.wav"))
     mixer.addSound("idle", path.join(audioFolder, "h_idle.wav"))
     mixer.addSound("drive", path.join(audioFolder, "h_drive.wav"))
 
+
     def onPressed(mode):
         if mode is Button.NORMAL_PRESS:
-            mixer.playSound("speedUp", False, 300, "drive", True)
+            mixer.clearQueue()
+            mixer.playSound("speedUp", False, 300)
+            mixer.queue("drive", True)
         else:
-            mixer.playSound("stop", False, 300, "idle", True)
+            mixer.clearQueue()
+            mixer.playSound("stop", False, 300)
+            mixer.queue("idle", True)
 
     btn = Button(pinBTN)
     btn.setListener(onPressed)
 
-    mixer.playSound("start", False, 0, "idle", True)
+    mixer.playSound("start", False, 0)
+    mixer.queue("idle", True)
 
     try:
         while True:
@@ -259,13 +265,16 @@ def audioMixerTest():
     except KeyboardInterrupt:
         print("Cancel audio mixer test")
 
+    mixer.stop()
+
 
 print("Start test units. Use ctrl+c to stop current test.")
 
 # audioTest()
-audioMixerTest()
+# audioMixerTest()
 # ledStripTest()
-# imuControllerTest()
+#
+imuControllerTest()
 # imuTest()
 # imuTestAlt()
 # ledTest()

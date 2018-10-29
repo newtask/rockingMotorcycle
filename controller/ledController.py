@@ -29,7 +29,7 @@ class LEDController(threading.Thread):
         self.isRunning = True
         super(LEDController, self).start()
 
-    def blink(self, repeat, onDuration, offDuration):
+    def blink(self, repeat, onMillis, offMillis):
         self.cancelTask = True
 
         # wait until current task is finished
@@ -37,7 +37,7 @@ class LEDController(threading.Thread):
             time.sleep(self.minWaitTime)
 
         self.cancelTask = False
-        self.currentTask = LEDTask(repeat, onDuration, offDuration)
+        self.currentTask = LEDTask(repeat, onMillis / 1000, offMillis / 1000)
 
     def sleep(self, sec):
 

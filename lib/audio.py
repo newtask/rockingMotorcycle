@@ -17,6 +17,7 @@ class Audio:
     def unmute(self):
         self.setVolume(self.lastVolume)
         self.isMute = False
+        return self.lastVolume
 
     def mute(self):
         self.lastVolume = self.getVolume()
@@ -34,6 +35,8 @@ class Audio:
             vol = 100
 
         self.setVolume(vol)
+
+        return vol
 
     def volumeDown(self):
         if self.isMute:

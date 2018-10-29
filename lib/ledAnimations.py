@@ -138,7 +138,7 @@ class FadeCycleAnimation(FadeAnimation):
 
         self.isRunning = True
 
-        print("fad cyclee")
+        # print("fad cyclee")
 
         self.fade(self.c1, self.c2)
         self.fade(self.c2, self.c1)
@@ -158,7 +158,7 @@ class ColorSetAnimation(LEDAnimation):
 
         self.isRunning = True
 
-        print("color", self.color)
+        # print("color", self.color)
 
         self.setColor(self.color)
         time.sleep(1)
@@ -180,7 +180,7 @@ class TheaterChaseAnimation(LEDAnimation):
 
         self.isRunning = True
 
-        print("theaterChase")
+        # print("theaterChase")
 
         """Movie theater light style chaser animation."""
         for j in range(self.iterations):
@@ -214,7 +214,7 @@ class TheaterChaseRainbowAnimation(LEDAnimation):
 
         self.isRunning = True
 
-        print("theaterChaseRainbow")
+        # print("theaterChaseRainbow")
 
         """Rainbow movie theater light style chaser animation."""
         for j in range(256):
@@ -249,7 +249,7 @@ class RainbowAnimation(LEDAnimation):
 
         self.isRunning = True
 
-        print("rainbow")
+        # print("rainbow")
 
         """Draw rainbow that fades across all pixels at once."""
         for j in range(256 * self.iterations):
@@ -277,7 +277,7 @@ class RainbowCycleAnimation(LEDAnimation):
 
         self.isRunning = True
 
-        print("rainbowCycle")
+        # print("rainbowCycle")
 
         """Draw rainbow that uniformly distributes itself across all pixels."""
         for j in range(256 * self.iterations):
@@ -306,7 +306,7 @@ class ColorWipeAnimation(LEDAnimation):
 
         self.isRunning = True
 
-        print("colorWipe")
+        # print("colorWipe")
 
         """Wipe color across display a pixel at a time."""
         for i in range(self.strip.numPixels()):
