@@ -24,3 +24,4 @@ An accelerometer triggered sound and light generator for rocking motorcycles. De
 Check if you have python3 installed
 ## Install libs
 - sudo apt-get install python3-rpi.gpio -y
+- sudo apt-get install daemon -y

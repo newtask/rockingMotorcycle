@@ -25,6 +25,7 @@ class LEDAnimation:
     COLOR_WHITE = Color(255, 255, 255)
     COLOR_BLACK = Color(0, 0, 0)
 
+
     def __init__(self, name="LEDAnimation", wait_ms=50):
         self.name = name
         self.isRunning = False
@@ -167,9 +168,13 @@ class ColorSetAnimation(LEDAnimation):
 
 
 class TheaterChaseAnimation(LEDAnimation):
-    def __init__(self, color: Color, wait_ms: int = 50, iterations: int = 10, distance=3):
+    def __init__(self, color: Color, wait_ms: int = 50, iterations: int = 10, distance: int =3):
         super().__init__("Theater Chase", wait_ms)
 
+        self.update(color, wait_ms, iterations, distance)
+
+    def update(self,  color: Color, wait_ms: int , iterations: int, distance: int ):
+        self.wait_ms = wait_ms
         self.color = color
         self.iterations = iterations
         self.distance = distance

@@ -12,16 +12,16 @@ from lib.audio import Audio
 from lib.audioMixer import AudioMixer
 from lib.button import Button
 from lib.led import LED
-from lib.ledAnimations import TheaterChaseAnimation, LEDAnimation, RGBColor, FadeCycleAnimation, RainbowCycleAnimation
+from lib.ledAnimations import TheaterChaseAnimation, LEDAnimation, RGBColor, FadeCycleAnimation, ColorSetAnimation
 from lib.ledStrip import LEDStrip
 
 
 class RockingMotorcycleGame:
-    SOUND_START = "start"
-    SOUND_STOP = "stop"
-    SOUND_SPEEDUP = "speedUp"
-    SOUND_IDLE = "idle"
-    SOUND_DRIVE = "drive"
+    SOUND_START = "start"  # 11 sec
+    SOUND_STOP = "stop"  # 6 sev
+    SOUND_SPEEDUP = "speedUp"  # 13 sec
+    SOUND_IDLE = "idle"  # 40 sec
+    SOUND_DRIVE = "drive"  # 22 sec
 
     MODE_START = 0
     MODE_DRIVE = 1
@@ -46,20 +46,20 @@ class RockingMotorcycleGame:
         self.ledControl = LEDController(led)
         self.ledControl.start()
 
-        self.changeDelta = 3000
+        self.changeDelta = 1500
         self.currentMode = -1
 
         self.imuController = IMUController(imuAddress, limit=3000)
         self.initImuController()
 
-        self.animSlow = TheaterChaseAnimation(LEDAnimation.COLOR_GREEN, 250, 10, 15)
-        self.animMedium = TheaterChaseAnimation(LEDAnimation.COLOR_BLUE, 50, 50, 15)
-        self.animFast = TheaterChaseAnimation(LEDAnimation.COLOR_RED, 20, 50, 15)
-        self.animFade = FadeCycleAnimation(RGBColor(0, 0, 0), RGBColor(80, 80, 80), 25, 20)
-        self.animRainbow = RainbowCycleAnimation()
+        self.animDrive = TheaterChaseAnimation(LEDAnimation.COLOR_CYAN, 20, 50, 15)
+        self.animIdle = FadeCycleAnimation(RGBColor(0, 0, 0), RGBColor(0, 80, 0), 25, 20)
 
         self.ledStrip = LEDStrip()
         self.ledStrip.start()
+
+        self.speed = 0
+        self.lastLoop = self.getMillis()
 
     def initImuController(self):
         self.imuChangeTime = 0
@@ -78,22 +78,60 @@ class RockingMotorcycleGame:
 
         self.mixer.setListener(self.mixerListener)
 
+    def run(self):
+        # indicate start
+        self.ledControl.blink(2, 100, 100)
+
+        while True:
+            self.btn.loop()
+
+            mode = self.getMode(self.imuChangeTime)
+
+            accl = self.getAcceleration(mode, self.lastLoop)
+
+            self.speed += accl
+
+            if self.speed < 0:
+                self.speed = 0
+            elif self.speed > 100:
+                self.speed = 100
+
+            print(self.speed)
+
+            self.playLEDAnimation(mode, self.speed)
+
+            self.playSound(mode)
+
+            self.lastLoop = self.getMillis()
+
+            self.currentMode = mode
+
+            time.sleep(0.1)
+
     def mixerListener(self, id):
-        if id == self.SOUND_START:
-            self.ledStrip.setAnimation(self.animRainbow)
-        elif id == self.SOUND_IDLE:
-            self.ledStrip.setAnimation(self.animFade)
-        elif id == self.SOUND_DRIVE:
-            self.ledStrip.setAnimation(self.animFast)
-        elif id == self.SOUND_SPEEDUP:
-            self.ledStrip.setAnimation(self.animSlow)
-        elif id == self.SOUND_STOP:
-            self.ledStrip.setAnimation(self.animMedium)
+        return
+
+    def playLEDAnimation(self, mode: int, speed: int):
+        curAnim = self.ledStrip.getAnimation()
+
+        if mode == self.MODE_START or speed <= 5:
+            if curAnim != self.animIdle:
+                self.ledStrip.setAnimation(self.animIdle)
+        else:
+            if curAnim is None or curAnim != self.animDrive:
+                curAnim = self.animDrive
+                self.ledStrip.setAnimation(curAnim)
+
+            self.animDrive.update(curAnim.color, int(10 + 200 * ((100 - speed) / 100)), curAnim.iterations,
+                                  curAnim.distance)
 
     def stop(self):
         self.mixer.stop()
         self.ledControl.stop()
+        self.ledStrip.setAnimation(ColorSetAnimation(LEDAnimation.COLOR_BLACK))
+        time.sleep(1)
         self.ledStrip.stop()
+        self.imuController.stop()
         GPIO.cleanup()
 
     def imuListener(self):
@@ -124,45 +162,47 @@ class RockingMotorcycleGame:
         else:
             self.ledControl.blink(1, 1000, self.LED_SPEED)
 
-    def run(self):
-        # indicate start
-        self.ledControl.blink(2, 100, 100)
+    def getMode(self, imuChangeTime: int):
+        if imuChangeTime == 0:
+            return self.MODE_START
+        elif self.getMillis() - imuChangeTime < self.changeDelta:
+            return self.MODE_DRIVE
+        else:
+            return self.MODE_STOP
 
-        # Start the engine
-        self.setMode(self.MODE_START)
-
-        while True:
-            self.btn.loop()
-
-            if self.imuChangeTime == 0:
-                pass
-            elif self.getMillis() - self.imuChangeTime < self.changeDelta:
-                self.setMode(self.MODE_DRIVE)
-            else:
-                self.setMode(self.MODE_STOP)
-
-            time.sleep(0.1)
-
-    def setMode(self, mode: int):
+    def playSound(self, mode: int):
 
         if self.currentMode == mode:
             return
-
-        print("set mode: {}".format(mode))
 
         self.mixer.clearQueue()
 
         if mode == self.MODE_START:
             self.mixer.playSound(self.SOUND_START, False, 0)
             self.mixer.queue(self.SOUND_IDLE, True)
-            # self.ledStrip.setAnimation(self.animSlow)
         elif mode == self.MODE_DRIVE:
-            self.mixer.playSound(self.SOUND_SPEEDUP, False, 0)
+            self.mixer.playSound(self.SOUND_SPEEDUP, False)
             self.mixer.queue(self.SOUND_DRIVE, True)
-            # self.ledStrip.setAnimation(self.animFast)
         elif mode == self.MODE_STOP:
-            self.mixer.playSound(self.SOUND_STOP, False, 0)
+            self.mixer.playSound(self.SOUND_STOP, False)
             self.mixer.queue(self.SOUND_IDLE, True)
-            # self.ledStrip.setAnimation(self.animMedium)
 
-        self.currentMode = mode
+    def getAcceleration(self, mode: int, lastLoop: int):
+
+        accl = 0
+
+        if mode != self.MODE_START:
+            # get time between loops
+            diff = self.getMillis() - lastLoop
+
+            speedChange = (diff / 1000) * 5  # 17 kmh per sec
+
+            if mode == self.MODE_DRIVE:
+                # decreases speed
+                accl = speedChange
+
+            elif mode == self.MODE_STOP:
+                # increase speed
+                accl -= 2 * speedChange
+
+        return accl

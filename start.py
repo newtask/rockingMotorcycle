@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from rockingMotorcycle import RockingMotorcycleGame
 
 if __name__ == "__main__":

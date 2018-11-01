@@ -32,6 +32,9 @@ class LEDStrip(threading.Thread):
         self.isRunning = True
         super(LEDStrip, self).start()
 
+    def getAnimation(self):
+        return self.animation
+
     def setAnimation(self, animation: LEDAnimation):
         print("Set animation", animation)
 

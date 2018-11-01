@@ -1,0 +1,64 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          Rocking game
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Rocking game
+# Description:       Rocks!
+### END INIT INFO
+
+# Author: Andreas Taske <andreas@taske.de>
+#
+ 
+DESC="Rocking motorcycle game "
+DAEMON=start.py
+DIR=/home/pi/rockginggame
+NAME=rockginggame
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+USER=root
+DAEMON_OPTS=""
+
+# Get lsb functions
+. /lib/lsb/init-functions
+[ -f "/etc/defaults/$NAME" ] && . /etc/defaults/$NAME
+case "$1" in
+    start)
+        log_daemon_msg "Starting $DESC" $NAME
+        daemon --name=$NAME --unsafe --chdir=$DIR --attempts=3 --respawn -- $DIR/$DAEMON $OPTIONS
+        sleep 1
+        daemon --name=$NAME --running
+        log_end_msg $?
+        ;;
+    stop)
+        log_daemon_msg "Stopping $DESC" $NAME
+        daemon --name=$NAME --running && daemon --name=$NAME --user=$USER --stop
+        log_end_msg $?
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;
+    status)
+        daemon --name=$NAME --running
+        if [ "$?" == "0" ] ; then
+            log_success_msg "$NAME is running"
+        else
+            log_failure_msg "$NAME is not running"
+        fi
+        ;;
+    *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart|status}" >&2
+        exit 1
+        ;;
+   esac
+exit 0
+
+
+
+
+
+
+
