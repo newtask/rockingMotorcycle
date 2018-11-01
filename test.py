@@ -89,6 +89,12 @@ def ledStripTest():
 
     animations = []
 
+
+    animations.append(ColorSetAnimation(LEDAnimation.COLOR_BLACK))
+    animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_YELLOW, 100, 50, 15, True))
+    animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_CYAN, 100, 50, 15))
+
+
     animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_BLUE, 500, 10, 15))
     animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_GREEN, 50, 10, 15))
     animations.append(TheaterChaseAnimation(LEDAnimation.COLOR_RED, 50, 50, 15))
@@ -272,9 +278,9 @@ print("Start test units. Use ctrl+c to stop current test.")
 
 # audioTest()
 # audioMixerTest()
-# ledStripTest()
+ledStripTest()
 #
-imuControllerTest()
+#imuControllerTest()
 # imuTest()
 # imuTestAlt()
 # ledTest()

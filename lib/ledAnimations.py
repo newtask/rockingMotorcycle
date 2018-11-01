@@ -25,7 +25,6 @@ class LEDAnimation:
     COLOR_WHITE = Color(255, 255, 255)
     COLOR_BLACK = Color(0, 0, 0)
 
-
     def __init__(self, name="LEDAnimation", wait_ms=50):
         self.name = name
         self.isRunning = False
@@ -168,12 +167,13 @@ class ColorSetAnimation(LEDAnimation):
 
 
 class TheaterChaseAnimation(LEDAnimation):
-    def __init__(self, color: Color, wait_ms: int = 50, iterations: int = 10, distance: int =3):
+    def __init__(self, color: Color, wait_ms: int = 50, iterations: int = 10, distance: int = 3, splitAndInvert=False):
         super().__init__("Theater Chase", wait_ms)
 
+        self.splitAndInvert = splitAndInvert
         self.update(color, wait_ms, iterations, distance)
 
-    def update(self,  color: Color, wait_ms: int , iterations: int, distance: int ):
+    def update(self, color: Color, wait_ms: int, iterations: int, distance: int):
         self.wait_ms = wait_ms
         self.color = color
         self.iterations = iterations
@@ -196,13 +196,33 @@ class TheaterChaseAnimation(LEDAnimation):
                 if self.isStopped:
                     break
 
-                for i in range(0, self.strip.numPixels(), self.distance):
-                    self.strip.setPixelColor(i + q, self.color)
+                numPixels = self.strip.numPixels()
+
+                if self.splitAndInvert is False:
+                    for i in range(0, numPixels, self.distance):
+                        self.strip.setPixelColor(i + q, self.color)
+                else:
+                    halfNumPixels = int(numPixels / 2)
+
+                    for i in range(0, halfNumPixels, self.distance):
+                        self.strip.setPixelColor(i + q, self.color)
+                    for i in range(numPixels, halfNumPixels, -self.distance):
+                        self.strip.setPixelColor(numPixels - (numPixels - i + q) - 1, self.color)
 
                 self.strip.show()
+
                 time.sleep(self.wait_ms / 1000.0)
-                for i in range(0, self.strip.numPixels(), self.distance):
-                    self.strip.setPixelColor(i + q, 0)
+
+                if self.splitAndInvert is False:
+                    for i in range(0, self.strip.numPixels(), self.distance):
+                        self.strip.setPixelColor(i + q, 0)
+                else:
+                    halfNumPixels = int(numPixels / 2)
+
+                    for i in range(0, halfNumPixels, self.distance):
+                        self.strip.setPixelColor(i + q, 0)
+                    for i in range(numPixels, halfNumPixels, -self.distance):
+                        self.strip.setPixelColor(numPixels - (numPixels - i + q) - 1, 0)
 
         self.isRunning = False
 

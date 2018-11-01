@@ -52,7 +52,7 @@ class RockingMotorcycleGame:
         self.imuController = IMUController(imuAddress, limit=3000)
         self.initImuController()
 
-        self.animDrive = TheaterChaseAnimation(LEDAnimation.COLOR_CYAN, 20, 50, 15)
+        self.animDrive = TheaterChaseAnimation(LEDAnimation.COLOR_CYAN, 20, 50, 15, True)
         self.animIdle = FadeCycleAnimation(RGBColor(0, 0, 0), RGBColor(0, 80, 0), 25, 20)
 
         self.ledStrip = LEDStrip()
@@ -95,8 +95,6 @@ class RockingMotorcycleGame:
                 self.speed = 0
             elif self.speed > 100:
                 self.speed = 100
-
-            print(self.speed)
 
             self.playLEDAnimation(mode, self.speed)
 
@@ -181,10 +179,10 @@ class RockingMotorcycleGame:
             self.mixer.playSound(self.SOUND_START, False, 0)
             self.mixer.queue(self.SOUND_IDLE, True)
         elif mode == self.MODE_DRIVE:
-            self.mixer.playSound(self.SOUND_SPEEDUP, False)
+            self.mixer.playSound(self.SOUND_SPEEDUP, False, 2000)
             self.mixer.queue(self.SOUND_DRIVE, True)
         elif mode == self.MODE_STOP:
-            self.mixer.playSound(self.SOUND_STOP, False)
+            self.mixer.playSound(self.SOUND_STOP, False, 2000)
             self.mixer.queue(self.SOUND_IDLE, True)
 
     def getAcceleration(self, mode: int, lastLoop: int):
