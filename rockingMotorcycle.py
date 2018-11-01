@@ -120,7 +120,9 @@ class RockingMotorcycleGame:
                 curAnim = self.animDrive
                 self.ledStrip.setAnimation(curAnim)
 
-            self.animDrive.update(curAnim.color, int(10 + 200 * ((100 - speed) / 100)), curAnim.iterations,
+            percentage = (100 - speed) / 100
+            color = LEDAnimation.wheel(int(80 * (1 - percentage)))
+            self.animDrive.update(color, int(10 + 200 * percentage), curAnim.iterations,
                                   curAnim.distance)
 
     def stop(self):
