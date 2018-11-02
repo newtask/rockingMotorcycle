@@ -1,0 +1,10 @@
+[Unit]
+Description=PWM Audio Service
+
+[Service]
+ExecStart=/home/pi/rockingMotorcycle/pwmaudio.sh
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
+Alias=pwmaudio.service

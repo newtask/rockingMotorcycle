@@ -4,7 +4,7 @@ from rockingMotorcycle import RockingMotorcycleGame
 if __name__ == "__main__":
     print("Start game. Rock on!!!")
 
-    game = RockingMotorcycleGame()
+    game = RockingMotorcycleGame(startVolume=90)
 
     try:
         game.run()

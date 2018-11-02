@@ -1,5 +1,5 @@
 #! /bin/sh
-# /etc/init.d/rockgame
+# /etc/init.d/rockinggame
 
 ### BEGIN INIT INFO
 # Provides:          rockgame
@@ -18,7 +18,7 @@ case "$1" in
   start)
     echo "Starting rocking motorcycle game"
     # run application you want to start
-    python3 /home/pi/rockingMotorcycle/start.py &
+    sudo python3 /home/pi/rockingMotorcycle/start.py &
     ;;
   stop)
     echo "Stopping rocking motorcycle game"
