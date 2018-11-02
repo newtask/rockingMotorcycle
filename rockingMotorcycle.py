@@ -181,10 +181,10 @@ class RockingMotorcycleGame:
             self.mixer.playSound(self.SOUND_START, False, 0)
             self.mixer.queue(self.SOUND_IDLE, True)
         elif mode == self.MODE_DRIVE:
-            self.mixer.playSound(self.SOUND_SPEEDUP, False, 2000)
+            self.mixer.playSound(self.SOUND_SPEEDUP, False)
             self.mixer.queue(self.SOUND_DRIVE, True)
         elif mode == self.MODE_STOP:
-            self.mixer.playSound(self.SOUND_STOP, False, 2000)
+            self.mixer.playSound(self.SOUND_STOP, False)
             self.mixer.queue(self.SOUND_IDLE, True)
 
     def getAcceleration(self, mode: int, lastLoop: int):

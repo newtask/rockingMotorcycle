@@ -25,3 +25,5 @@ Check if you have python3 installed
 ## Install libs
 - sudo apt-get install python3-rpi.gpio -y
 - sudo apt-get install daemon -y
+
+# https://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html
