@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 
 from controller.imuController import IMUController
 from controller.ledController import LEDController
+from controller.lsmController import LSMController
 from lib.LSM6DS3 import LSM6DS3
 from lib.LSM6DS3_ALT import LSM6DS3_alt
 from lib.audio import Audio
@@ -230,6 +231,38 @@ def audioTest():
         print("Cancel audio test")
 
 
+def lsm303dTest():
+    import time
+    from lsm303d import LSM303D
+
+    lsm = LSM303D(0x1d)
+
+
+    while True:
+        t = lsm.temperature()
+        m = lsm.magnetometer()
+        a = lsm.accelerometer()
+        # t_raw = lsm._lsm303d.values['TEMPERATURE']
+        # print("{:04.1f} {:016b}".format(t, t_raw))
+
+        values = list(m) + list(a)
+
+        print(("{:+06.2f} : {:+06.2f} : {:+06.2f}   " * 2).format(*values))
+        # print(("{:+06.2f} : {:+06.2f} : {:+06.2f}   " ).format(*a))
+        # print(a)
+
+        time.sleep(1.0 / 25)
+
+def lsmControllerTest():
+    def onChanged():
+        print("changed")
+
+    lsm = LSMController(limit=0.2)
+    lsm.setListener(onChanged)
+    lsm.start()
+
+
+
 def audioMixerTest():
     print("Start audio mixer test")
 
@@ -278,7 +311,9 @@ print("Start test units. Use ctrl+c to stop current test.")
 
 # audioTest()
 # audioMixerTest()
-ledStripTest()
+# ledStripTest()
+lsmControllerTest()
+# lsm303dTest()
 #
 #imuControllerTest()
 # imuTest()

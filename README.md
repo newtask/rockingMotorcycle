@@ -52,6 +52,9 @@ network={
     - Select yes and ok 
 - check imu address:
     - sudo i2cdetect -y 1
+	
+# Install Lib for alternative 6dof sensor lsm303d
+- sudo pip3 install lsm303d
     
 # Install NeoPixel
 - cd ~

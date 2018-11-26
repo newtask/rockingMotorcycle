@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 
 from controller.imuController import IMUController
 from controller.ledController import LEDController
+from controller.lsmController import LSMController
 from lib.audio import Audio
 from lib.audioMixer import AudioMixer
 from lib.button import Button
@@ -49,7 +50,8 @@ class RockingMotorcycleGame:
         self.changeDelta = changeDelta
         self.currentMode = -1
 
-        self.imuController = IMUController(imuAddress, limit=limit)
+        # self.imuController = IMUController(imuAddress, limit=limit)
+        self.imuController = LSMController(imuAddress, limit=limit)
         self.initImuController()
 
         self.animDrive = TheaterChaseAnimation(LEDAnimation.COLOR_CYAN, 20, 50, 15, True)
