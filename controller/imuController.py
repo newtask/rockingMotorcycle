@@ -24,9 +24,9 @@ class IMUController(threading.Thread, Listener):
 
         cx = self.lsm.readRawGyroX()
         dx = cx - self.lastGyroX
-
+        print("dx", dx)
         if dx > self.limit or dx < -self.limit:
-            # print("dx", dx)
+            #print("dx", dx)
             self.lastGyroX = cx
             return True
 
@@ -36,9 +36,9 @@ class IMUController(threading.Thread, Listener):
 
         cy = self.lsm.readRawGyroY()
         dy = cy - self.lastGyroY
-
+        print("dy", dy)
         if dy > self.limit or dy < -self.limit:
-            # print("dy", dy)
+            #print("dy", dy)
             self.lastGyroX = cy
             return True
 
@@ -48,9 +48,9 @@ class IMUController(threading.Thread, Listener):
 
         cz = self.lsm.readRawGyroZ()
         dz = cz - self.lastGyroZ
-
+        print("dz", dz)
         if dz > self.limit or dz < -self.limit:
-            # print("dz", dz)
+            #print("dz", dz)
             self.lastGyroZ = cz
             return True
 

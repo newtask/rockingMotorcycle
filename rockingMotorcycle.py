@@ -29,7 +29,7 @@ class RockingMotorcycleGame:
 
     LED_SPEED = 100
 
-    def __init__(self, pinBTN=27, pinLED=17, startVolume=70, imuAddress=0x6a):
+    def __init__(self, pinBTN=27, pinLED=17, startVolume=70, imuAddress=0x6a, limit=350, changeDelta=1000):
         GPIO.setmode(GPIO.BCM)
 
         led = LED(pinLED)
@@ -46,10 +46,10 @@ class RockingMotorcycleGame:
         self.ledControl = LEDController(led)
         self.ledControl.start()
 
-        self.changeDelta = 1500
+        self.changeDelta = changeDelta
         self.currentMode = -1
 
-        self.imuController = IMUController(imuAddress, limit=3000)
+        self.imuController = IMUController(imuAddress, limit=limit)
         self.initImuController()
 
         self.animDrive = TheaterChaseAnimation(LEDAnimation.COLOR_CYAN, 20, 50, 15, True)
