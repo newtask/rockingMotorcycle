@@ -1,0 +1,10 @@
+[Unit]
+Description=Rocking Motorcycle game
+DefaultDependencies=no
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/rockingMotorcycle/start.py
+
+[Install]
+WantedBy=sysinit.target

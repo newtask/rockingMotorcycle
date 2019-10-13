@@ -41,7 +41,7 @@ network={
 
 ## Install Adafruit_Python_GPIO
 - sudo apt-get update
-- sudo apt-get install build-essential python3-pip python3-dev python-smbus python3-setuptools git -y
+- sudo apt-get install build-essential python3-pip python3-dev python3-smbus python3-setuptools git -y
 - git clone https://github.com/adafruit/Adafruit_Python_GPIO.git
 - cd Adafruit_Python_GPIO
 - sudo python3 setup.py install
@@ -93,7 +93,7 @@ network={
         - aplay audio/h_start.wav
         - set audio volume via alsamixer
 - set gpio alt automatically:
-	- sudo chmod +x /home/pi/rockingMotorcycle/pcmaudio.sh
+	- sudo chmod +x /home/pi/rockingMotorcycle/pwmaudio.sh
 	- sudo cp /home/pi/rockingMotorcycle/pwmaudio.service  /lib/systemd/system/pwmaudio.service
 	- sudo systemctl enable pwmaudio.service
 	- sudo systemctl start pwmaudio.service
@@ -109,6 +109,12 @@ network={
 
 # install rocking game 
 - sudo apt-get install python3-rpi.gpio daemon -y   
+
+- sudo cp /home/pi/rockingMotorcycle/rockinggame.service /lib/systemd/system/rockinggame.service
+- sudo chmod 644 /lib/systemd/system/rockinggame.service
+- sudo systemctl daemon-reload
+- sudo systemctl enable rockinggame.service
+or
 - sudo cp /home/pi/rockingMotorcycle/rockinggame /etc/init.d/rockinggame
 - sudo chmod 755 /etc/init.d/rockinggame
 - sudo update-rc.d rockinggame defaults
